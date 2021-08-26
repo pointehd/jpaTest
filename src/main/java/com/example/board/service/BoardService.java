@@ -22,22 +22,27 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardService {
 	private final BoardRepository boardRepository;
 	
+	
+	// 생성
 	public BoardResponse createBoard(String content) {
 		log.info("create content {}", content);
 		Board board = boardRepository.save(Board.builder().content(content).build());
 		return board.toBoardResponse();
 	}
 	
+	// BOARD 정보 변경
 	public BoardResponse updateBoard(BoardRequest request) {
 		Board board = boardRepository.findById(request.getSeq()).orElseThrow(()->new RuntimeException("notFoundBoard"));
 		boardRepository.save(board.contentUpdate(request.getContent()));
 		return board.toBoardResponse();
 	}
 	
+	// BOARD 삭제 (실제 삭제됨)
 	public void deleteBoard(Long seq) {
 		boardRepository.deleteById(seq);
 	}
 	
+	// 전체조회
 	public List<BoardResponse> getAllBoard(){
 		return boardRepository.findAll().stream().map(Board::toBoardResponse).collect(Collectors.toList());
 	}
